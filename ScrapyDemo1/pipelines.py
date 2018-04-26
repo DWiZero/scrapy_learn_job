@@ -14,10 +14,12 @@ class Scrapydemo1Pipeline(object):
     def process_item(self, BossJob_Item, spider):
         # try:
         cursor = self.db.cursor()
-        sql = "INSERT INTO boss_job(job_name, job_pay, job_description, company_name, company_description) VALUES ('" + \
+        sql = "INSERT INTO boss_job(job_name, job_pay, job_age, job_area, education, company_name, company_description,company_url) VALUES ('" + \
               BossJob_Item['job_name'] + "','" + BossJob_Item['job_pay'] + "','" + BossJob_Item[
-                  'job_description'] + "','" + BossJob_Item['company_name'] + "','" + BossJob_Item[
-                  'company_description'] + "')"
+                  'job_age'] + "','" + BossJob_Item[
+                  'job_area'] + "','" + BossJob_Item[
+                  'education'] + "','" + BossJob_Item['company_name'] + "','" + BossJob_Item[
+                  'company_description'] + "','" + BossJob_Item['company_url'] + "')"
         cursor.execute(sql)
         # 执行sql语句
         self.db.commit()

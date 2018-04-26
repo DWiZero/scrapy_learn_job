@@ -17,10 +17,13 @@ class BossJob_Item(scrapy.Item):
     # 工作薪资
     job_pay = scrapy.Field()
     # 工作描述
-    job_description = scrapy.Field()
-
+    job_age = scrapy.Field()
+    job_area = scrapy.Field()
+    education = scrapy.Field()
     # 工司名称
     company_name = scrapy.Field()
+    # 工司简介链接
+    company_url = scrapy.Field()
     # 工司描述
     company_description = scrapy.Field()
     # pass
