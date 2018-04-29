@@ -16,6 +16,8 @@ class BossJob_Item(scrapy.Item):
     job_name = scrapy.Field()
     # 工作薪资
     job_pay = scrapy.Field()
+
+    job_url = scrapy.Field()
     # 工作描述
     job_age = scrapy.Field()
     job_area = scrapy.Field()
