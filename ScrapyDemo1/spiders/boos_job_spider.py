@@ -3,22 +3,23 @@ from scrapy import Request
 from bs4 import BeautifulSoup
 from ..items import BossJob_Item
 
+
 class jobSpider(scrapy.Spider):
     name = "boss_job"
     allowed_domains = ["zhipin.com"]
     start_urls = [
-        "https://www.zhipin.com/",
-        "https://www.zhipin.com/c101280600-p100101/"
+        "https://www.zhipin.com/"
+        # "https://www.zhipin.com/c101280600-p100101/"
     ]
 
     def parse(self, response):
         sel = scrapy.Selector(response)
-        self.getAllJobClass(sel)
-        self.getCityDistrict(sel)
-        self.getDistrictStreet(sel)
+        # self.getAllJobClassCode(sel)
+        # self.getAllCityCode(sel)
+        # self.getCityDistrict(sel)
+        # self.getDistrictStreet(sel)
         # yield from self.getNextPageUrl(sel)
-        yield from self.getJobInfo(sel)
-
+        # yield from self.getJobInfo(sel)
 
     def getJobInfo(self, sel):
         item = BossJob_Item()
@@ -51,8 +52,8 @@ class jobSpider(scrapy.Spider):
             next_page_url = "https://www.zhipin.com" + next_page[0]
             yield Request(next_page_url)
 
-    # 获取所有的分类
-    def getAllJobClass(self, sel):
+    # 获取所有工作类的职位编码：java，C++,...
+    def getAllJobClassCode(self, sel):
         allJobClass = []
         jobClass = sel.xpath("//div/div[@class='job-menu']/dl/div[@class='menu-sub']").extract()
 
@@ -62,39 +63,57 @@ class jobSpider(scrapy.Spider):
                 for link in soup.find_all('a'):
                     uri = link.get('href')
                     if uri.startswith('/'):
-                        allJobClass.append("https://www.zhipin.com" + uri)
+                        # allJobClass.append("https://www.zhipin.com" + uri)
+                        allJobClass.append(uri[uri.find('p'):-1])
         print("_____allJobClass______")
         print(allJobClass)
         print("_____allJobClass______")
 
-    # 获取所有的城市的所有区
-    def getCityDistrict(self, sel):
-        allDistrict = []
-        District = sel.xpath(
-            "//div[@class='condition-box']/dl[@class='condition-district show-condition-district']").extract()
-        if District:
-            for item in District:
-                soup = BeautifulSoup(item, 'lxml')
-                for link in soup.find_all('a'):
-                    uri = link.get('href')
-                    if uri.startswith('/'):
-                        allDistrict.append("https://www.zhipin.com" + uri)
-        print("_____allDistrict______")
-        print(allDistrict)
-        print("_____allDistrict______")
+    # 获取所有城市的编码
+    # def getAllCityCode(self, sel):
+    #     allCityCode = []
+    #     allCityUl = sel.xpath(
+    #         "").extract()
+    #     print(allCityUl)
+    #     if allCityUl:
+    #         soup = BeautifulSoup(allCityUl[0], 'lxml')
+    #         for link in soup.find_all('li'):
+    #             uri = link.get('deta-val')
+    #             allCityCode.append('c' + uri)
+    #     print("_____allCityCode______")
+    #     print(allCityCode)
+    #     print("_____allCityCode______")
 
-    # 获取所有的城市的区的街道
-    def getDistrictStreet(self, sel):
-        allStreet = []
-        Street = sel.xpath(
-            "//div[@class='condition-box']/dl[@class='condition-area']").extract()
-        if Street:
-            for item in Street:
-                soup = BeautifulSoup(item,'lxml')
-                for link in soup.find_all('a'):
-                    uri = link.get('href')
-                    if uri.startswith('/'):
-                        allStreet.append("https://www.zhipin.com" + uri)
-        print("_____allStreet______")
-        print(allStreet)
-        print("_____allStreet______")
+
+# 获取所有的城市的所有区
+def getCityDistrict(self, sel):
+    allDistrict = []
+    District = sel.xpath(
+        "//div[@class='condition-box']/dl[@class='condition-district show-condition-district']").extract()
+    if District:
+        for item in District:
+            soup = BeautifulSoup(item, 'lxml')
+            for link in soup.find_all('a'):
+                uri = link.get('href')
+                if uri.startswith('/'):
+                    allDistrict.append("https://www.zhipin.com" + uri)
+    print("_____allDistrict______")
+    print(allDistrict)
+    print("_____allDistrict______")
+
+
+# 获取所有的城市的区的街道
+def getDistrictStreet(self, sel):
+    allStreet = []
+    Street = sel.xpath(
+        "//div[@class='condition-box']/dl[@class='condition-area']").extract()
+    if Street:
+        for item in Street:
+            soup = BeautifulSoup(item, 'lxml')
+            for link in soup.find_all('a'):
+                uri = link.get('href')
+                if uri.startswith('/'):
+                    allStreet.append("https://www.zhipin.com" + uri)
+    print("_____allStreet______")
+    print(allStreet)
+    print("_____allStreet______")
