@@ -4,8 +4,10 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import urllib
 
 from scrapy import signals
+from scrapy.downloadermiddlewares.httpproxy import HttpProxyMiddleware
 
 
 class Scrapydemo1SpiderMiddleware(object):
@@ -101,3 +103,12 @@ class Scrapydemo1DownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class Ippl(HttpProxyMiddleware):
+    def __init__(self,ip=''):
+        self.ip=ip
+    def process_request(self,request,spider):
+        IPPOOLS = urllib.request.urlopen("http://tvp.daxiangdaili.com/ip/?tid=559072613131284&num=1").read().decode(
+            "utf-8", "ignore")
+        print("当前使用的代理IP是："+str(IPPOOLS))
+        request.meta["proxy"] = "http://" + str(IPPOOLS)
